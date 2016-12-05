@@ -703,7 +703,7 @@
                             您的姓名：
                         </div>
                         <div class="form_div_inputa">
-                            <input class="name" type="text" name="Name" id="Name" value="" placeholder="请输入您的姓名" />
+                            <input class="name" type="text" name="Name" id="Name" value="何征" placeholder="请输入您的姓名" />
                         </div>
                         <div class="clear">
                         </div>
@@ -716,7 +716,7 @@
                             手机号码：
                         </div>
                         <div class="form_div_inputa">
-                            <input class="name" type="text" name="CellPhone" id="CellPhone" value="" placeholder="请输入您的手机号" />
+                            <input class="name" type="text" name="CellPhone" id="CellPhone" value="17708117714" placeholder="请输入您的手机号" />
                         </div>
                         <div class="clear">
                         </div>
@@ -731,9 +731,9 @@
                         </div>
 
                         <div class="form_div_inputa area">
-                            <select name="province" ></select>
-                            <select name="city"><option value="">选城市</option></select>
-                            <select name="district"><option value="">选地区</option></select>
+                            <select name="province" id="province"></select>
+                            <select name="city" id="city"><option value="">选城市</option></select>
+                            <select name="district" id="district"><option value="">选地区</option></select>
                         </div>
                     </div>
                    
@@ -747,7 +747,7 @@
                             详细地址：
                         </div>
                         <div class="form_div_inputa">
-                            <input class="name" type="text" name="Address" id="Address" value="" placeholder="请输入收货地址" />
+                            <input class="name" type="text" name="Address" id="Address" value="天府广场" placeholder="请输入收货地址" />
                         </div>
                         <div class="clear">
                         </div>
@@ -834,32 +834,30 @@
 
     });
 
-    var url = "http://localhost:29128/api/orders";
+    //var url = "http://localhost:29128/api/orders";
+
+    var url = "http://harlanz.cn/api/orders";
 
     $("#pay").on("click",
     function () {
+        var valid = validateOrder();
+        if (false == valid) {
+            return;
+        }
+
         $.ajax({
-
             cache: true,
-
             type: "POST",
-
             url: url,
-
             data: $('#payform').serialize(),
-
             async: false,
 
             error: function (request) {
-
-                alert("通讯失败！请稍候再试。");
-
+                alert("提交订单失败！请稍候再试。");
             },
 
-            success: function (data) {
-
-                alert(data);
-
+            success: function (order) {
+                alert('提交订单成功\n订单号：' + order.Id);
             }
 
         });
@@ -874,23 +872,36 @@
             return false;
         }
 
-
         var CellPhone = document.getElementById('CellPhone').value;
+        if (CellPhone == '') {
+            alert('请输入您的手机号码');
+            return false;
+        }
         if (!(/^1[3|4|5|7|8]\d{9}$/.test(CellPhone))) {
             alert('手机号码格式不正确，请重新输入');
             return false;
         }
 
         var province = document.getElementById('province').value;
+        if (province == '') {
+            alert('请选择收货省份');
+            return false;
+        }
+
         var city = document.getElementById('city').value;
+        if (city == '') {
+            alert('请选择收货城市');
+            return false;
+        }
+         
         var district = document.getElementById('district').value;
-        if (province == '' || city == '' || district == '') {
+        if (district == '') {
             alert('请选择收货地区');
             return false;
         }
 
-        var Address = document.getElementById('Address').value;
-        if (Address == '') {
+        var Address = document.getElementById('Address').value;       
+        if (Address == '') {           
             alert('请输入详细地址');
             return false;
         }

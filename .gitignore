@@ -1,5 +1,8 @@
 *.jpg
 *.suo
 *.dll
+*.user
 \bin
 \obj
+
+
